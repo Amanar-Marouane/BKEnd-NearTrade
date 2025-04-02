@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Traits;
 
 trait HttpsResponse
 {
@@ -17,6 +17,7 @@ trait HttpsResponse
         foreach ($cookies as $key => $value) {
             $response->withCookie(cookie($key, $value, 1480, null, null, true, true));
         }
+        return $response;
     }
 
     protected function error($message = null, $data = null, $cookies = [], $code)
@@ -32,5 +33,6 @@ trait HttpsResponse
         foreach ($cookies as $key => $value) {
             $response->withCookie(cookie($key, $value, 1480, null, null, true, true));
         }
+        return $response;
     }
 }
