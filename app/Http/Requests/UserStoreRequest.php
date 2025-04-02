@@ -25,9 +25,27 @@ class UserStoreRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'unique:users,name'],
-            'email' => ['required', 'string', 'email', 'unique:users,email'],
+            'email' => ['required', 'email', 'unique:users,email'],
             'password' => ['required', 'string', Password::default()],
             'profile' => ['image'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'The name field is required.',
+            'name.string' => 'The name must be a valid string.',
+            'name.unique' => 'This name is already taken. Please choose another one.',
+
+            'email.required' => 'The email field is required.',
+            'email.email' => 'Please enter a valid email address.',
+            'email.unique' => 'This email is already registered.',
+
+            'password.required' => 'The password field is required.',
+            'password.string' => 'The password must be a valid string.',
+
+            'profile.image' => 'The profile must be a valid image file (jpeg, png, etc.).',
         ];
     }
 }
