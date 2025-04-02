@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\{UserStoreRequest};
+use App\Http\Requests\{UserLoginRequest, UserStoreRequest};
 use App\Http\Resources\{UserResource};
 use App\Traits\{HttpsResponse};
 use Illuminate\Http\{Request};
 use App\Models\{User};
 use Illuminate\Support\{Str};
-use Illuminate\Support\Facades\{Hash};
+use Illuminate\Support\Facades\{Auth, Hash};
 use Tymon\JWTAuth\Facades\{JWTAuth};
 
 class AuthController extends Controller
@@ -43,5 +43,16 @@ class AuthController extends Controller
         ]);
         $cookies = $this->jwtGenerator($user);
         return $this->success('Account created succefully', new UserResource($user), $cookies, 201);
+    }
+
+    public function login(UserLoginRequest $request)
+    {
+        if (!Auth::attempt(
+            ['email' => $request->email, 'password' => $request->password]
+        )) return $this->error('Invalid credentials', null, [], 401);
+
+        $user = Auth::user();
+        $cookies = $this->jwtGenerator($user);
+        return $this->success('Account logged succefully', new UserResource($user), $cookies);
     }
 }
