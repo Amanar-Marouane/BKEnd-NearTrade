@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->enum('role', ['User', 'Admin'])->default('User');
             $table->string('refresh_token')->nullable();
+            $table->rememberToken();
             $table->timestamps();
         });
 
