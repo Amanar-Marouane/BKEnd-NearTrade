@@ -8,7 +8,7 @@ use App\Traits\{HttpsResponse};
 use Illuminate\Http\{Request};
 use App\Models\{User};
 use Illuminate\Support\{Str};
-use Illuminate\Support\Facades\{Auth, Hash};
+use Illuminate\Support\Facades\{Auth, Cookie, Hash};
 use Tymon\JWTAuth\Facades\{JWTAuth};
 
 class AuthController extends Controller
@@ -41,6 +41,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
             'profile' => $imagePath ?? '/profile.jpg',
         ]);
+        Auth::login($user);
         $cookies = $this->jwtGenerator($user);
         return $this->success('Account created succefully', new UserResource($user), $cookies, 201);
     }
@@ -54,5 +55,22 @@ class AuthController extends Controller
         $user = Auth::user();
         $cookies = $this->jwtGenerator($user);
         return $this->success('Account logged succefully', new UserResource($user), $cookies);
+    }
+
+    public function logout(Request $request)
+    {
+        $user = $request->user();
+        $user->update([
+            'refresh_token' => null,
+        ]);
+        $access_token = $user->getJWTIdentifier();
+
+        JWTAuth::invalidate($access_token);
+        Auth::logout();
+
+        return $this->success('Account logout succefully', null, [
+            'access_token' => '',
+            'refresh_token' => '',
+        ]);
     }
 }
