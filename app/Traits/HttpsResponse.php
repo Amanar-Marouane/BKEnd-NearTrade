@@ -6,7 +6,7 @@ trait HttpsResponse
 {
     protected function success($message = null, $data = null, $cookies = [], $code = 200)
     {
-        $response =  response()->json(
+        $response = response()->json(
             [
                 'status' => 'Request has been sent successfully',
                 'message' => $message,
@@ -15,23 +15,23 @@ trait HttpsResponse
             $code
         );
         foreach ($cookies as $key => $value) {
-            $response->withCookie(cookie($key, $value, 1480, null, null, true, true));
+            $response->withCookie(cookie($key, $value, 1480, null, null, true, true, false, 'None'));
         }
         return $response;
     }
 
     protected function error($message = null, $data = null, $cookies = [], $code)
     {
-        $response =  response()->json(
+        $response = response()->json(
             [
-                'status' => 'Error has occured',
+                'status' => 'Error has occurred',
                 'message' => $message,
                 'data' => $data,
             ],
             $code
         );
         foreach ($cookies as $key => $value) {
-            $response->withCookie(cookie($key, $value, 1480, null, null, true, true));
+            $response->withCookie(cookie($key, $value, 1480, null, null, true, true, false, 'None'));
         }
         return $response;
     }
