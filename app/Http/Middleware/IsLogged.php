@@ -6,12 +6,13 @@ use App\Traits\HttpsResponse;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class IsLogged
 {
     use HttpsResponse;
+
     /**
      * Handle an incoming request.
      *
@@ -19,10 +20,11 @@ class IsLogged
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($access_token = $request->cookie('access_token')) {
+        $access_token = $request->cookie('access_token');
+        if ($access_token) {
             try {
                 $user = JWTAuth::setToken($access_token)->authenticate();
-                if ($user) return $this->error('LogOut First, You are currently signed up', null, [], 403);
+                if ($user) return $this->error('Logout first. You are already logged in.', null, [], 403);
             } catch (JWTException $e) {
                 return $next($request);
             }

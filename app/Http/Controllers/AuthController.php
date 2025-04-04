@@ -77,14 +77,30 @@ class AuthController extends Controller
 
     public function isLogged(Request $request)
     {
-        if ($access_token = $request->cookie('access_token')) {
-            try {
-                $user = JWTAuth::setToken($access_token)->authenticate();
-                if ($user) return $this->success('Signup or login first', false, []);
-            } catch (JWTException $e) {
-                return $this->success('You can proceed', true, []);
-            }
+        $access_token = $request->cookie('access_token');
+        $refresh_token = $request->cookie('refresh_token');
+
+        if (!$access_token || !$refresh_token) {
+            return $this->success('User is not authenticated', false, []);
         }
-        return $this->success('You can proceed', true, []);
+
+        try {
+            $user = JWTAuth::setToken($access_token)->authenticate();
+            if ($user) {
+                return $this->success('User is authenticated', true, []);
+            }
+        } catch (JWTException $e) {
+            $user = User::where('refresh_token', '=', $refresh_token)->first();
+            if (!$user) {
+                return $this->success('User is not authenticated', false, []);
+            }
+
+            $new_access_token = JWTAuth::fromUser($user);
+            $new_access_cookie = cookie('access_token', $new_access_token, 1480, '/', null, true, true, false, 'None');
+
+            return $this->success('User is authenticated', true, [$new_access_cookie]);
+        }
+
+        return $this->success('User is not authenticated', false, []);
     }
 }
