@@ -22,19 +22,30 @@ class JWTGuard
     {
         $access_token = $request->cookie('access_token');
         $refresh_token = $request->cookie('refresh_token');
+
         if (!$access_token || !$refresh_token) {
             return $this->error('Tokens are missing. Login first.', null, [], 403);
         }
 
-        $user = JWTAuth::setToken($access_token)->authenticate();
-        if (!$user) {
-            $user = User::where('refresh_token', $refresh_token)->first();
-            if (!$user) return $this->error('Invalid or expired tokens.', null, [], 403);
+        try {
+            $user = JWTAuth::setToken($access_token)->authenticate();
+            if (!$user) {
+                return $this->error('Invalid access token.', null, [], 403);
+            }
+        } catch (JWTException $e) {
+            $user = User::where('refresh_token', '=', $refresh_token)->first();
+            if (!$user) {
+                return $this->error('Invalid or expired tokens.', null, [], 403);
+            }
+
+            $new_access_token = JWTAuth::fromUser($user);
+            $new_access_cookie = cookie('access_token', $new_access_token, 1480, '/', null, true, true, false, 'None');
+
+            $response = response($next($request));
+            $response->withCookie($new_access_cookie);
+            $request->setUserResolver(fn() => $user);
         }
 
-        $request->setUserResolver(function () use ($user) {
-            return $user;
-        });
         return $next($request);
     }
 }

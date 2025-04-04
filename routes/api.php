@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{AuthController};
+use App\Http\Controllers\{AuthController, UserController};
 use App\Http\Middleware\{IsLogged, JWTGuard};
 use Illuminate\Support\Facades\Route;
 
@@ -12,5 +12,6 @@ Route::group(['middleware' => IsLogged::class], function () {
 });
 
 Route::group(['middleware' => JWTGuard::class], function () {
+    Route::get('/profile', [UserController::class, 'index']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
