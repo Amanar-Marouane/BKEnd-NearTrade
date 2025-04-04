@@ -9,6 +9,7 @@ use Illuminate\Http\{Request};
 use App\Models\{User};
 use Illuminate\Support\{Str};
 use Illuminate\Support\Facades\{Auth, Cookie, Hash};
+use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\{JWTAuth};
 
 class AuthController extends Controller
@@ -72,5 +73,18 @@ class AuthController extends Controller
             'access_token' => '',
             'refresh_token' => '',
         ]);
+    }
+
+    public function isLogged(Request $request)
+    {
+        if ($access_token = $request->cookie('access_token')) {
+            try {
+                $user = JWTAuth::setToken($access_token)->authenticate();
+                if ($user) return $this->success('Signup or login first', false, []);
+            } catch (JWTException $e) {
+                return $this->success('You can proceed', true, []);
+            }
+        }
+        return $this->success('You can proceed', true, []);
     }
 }
