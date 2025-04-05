@@ -19,7 +19,8 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'profile' => 'http://127.0.0.1:8000' . $this->profile,
+            'description' => $this->description,
+            'profile' => 'http://127.0.0.1:8000/' . $this->profile,
             'member_since' => Carbon::parse($this->created_at)->year,
         ];
     }

@@ -19,6 +19,7 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'password',
         'profile',
+        'description',
     ];
 
     public $incrementing = false;

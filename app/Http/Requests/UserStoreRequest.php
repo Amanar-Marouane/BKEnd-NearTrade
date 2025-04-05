@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
@@ -24,10 +25,11 @@ class UserStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'unique:users,name'],
+            'name' => ['required', 'string', 'unique:users,name', 'min:3'],
             'email' => ['required', 'email', 'unique:users,email'],
             'password' => ['required', 'string', Password::default(), 'confirmed'],
-            'profile' => ['image'],
+            'profile' => ['nullable', 'mimes:jpeg,jpg,png'],
+            'description' => ['nullable', 'string'],
         ];
     }
 
@@ -45,7 +47,7 @@ class UserStoreRequest extends FormRequest
             'password.required' => 'The password field is required.',
             'password.string' => 'The password must be a valid string.',
 
-            'profile.image' => 'The profile must be a valid image file (jpeg, png, etc.).',
+            'profile.mimes' => 'Only jpeg, jpg, and png image types are allowed for the profile.',
         ];
     }
 }

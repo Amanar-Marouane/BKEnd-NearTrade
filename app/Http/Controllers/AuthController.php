@@ -8,7 +8,7 @@ use App\Traits\{HttpsResponse};
 use Illuminate\Http\{Request};
 use App\Models\{User};
 use Illuminate\Support\{Str};
-use Illuminate\Support\Facades\{Auth, Cookie, Hash};
+use Illuminate\Support\Facades\{Auth, Hash, Log};
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\{JWTAuth};
 
@@ -30,17 +30,18 @@ class AuthController extends Controller
 
     public function store(UserStoreRequest $request)
     {
-        // if (!$request->hasFile('profile')) return $this->error('Error occured while uploading image', null, [], 400);
-        // $image = $request->file('profile');
-        // $imageName = Str::uuid() . '.' . $image->getClientOriginalExtension();
-        // $image->storeAs('/profiles', $imageName);
-        // $imagePath = '/profiles/' . $imageName;
+        if (!$request->hasFile('profile')) return $this->error('Error occurred while uploading image', null, [], 400);
+        $image = $request->file('profile');
+        $imageName = Str::uuid() . '.' . $image->getClientOriginalExtension();
+        $image->storeAs('profiles', $imageName, 'public');
+        $imagePath = 'storage/profiles/' . $imageName;
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'profile' => $imagePath ?? '/profile.jpg',
+            'description' => empty($request->description) ? 'No description included yet.' : $request->description,
         ]);
         Auth::login($user);
         $cookies = $this->jwtGenerator($user);
