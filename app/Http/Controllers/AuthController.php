@@ -30,11 +30,11 @@ class AuthController extends Controller
 
     public function store(UserStoreRequest $request)
     {
-        if (!$request->hasFile('profile')) return $this->error('Error occurred while uploading image', null, [], 400);
-        $image = $request->file('profile');
-        $imageName = Str::uuid() . '.' . $image->getClientOriginalExtension();
-        $image->storeAs('profiles', $imageName, 'public');
-        $imagePath = 'storage/profiles/' . $imageName;
+        if ($request->hasFile('profile') && $image = $request->file('profile')) {
+            $imageName = Str::uuid() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('profiles', $imageName, 'public');
+            $imagePath = 'storage/profiles/' . $imageName;
+        }
 
         $user = User::create([
             'name' => $request->name,
