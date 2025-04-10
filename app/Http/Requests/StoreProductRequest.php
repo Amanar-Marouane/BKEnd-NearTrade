@@ -30,6 +30,7 @@ class StoreProductRequest extends FormRequest
             'price' => 'required|integer|min:1',
             'images' => 'required|array|min:1',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif',
+            'location' => 'required|string',
         ];
     }
 
@@ -64,6 +65,9 @@ class StoreProductRequest extends FormRequest
             'images.min' => 'Please upload at least one product image.',
             'images.*.image' => 'The uploaded file must be an image.',
             'images.*.mimes' => 'Only JPEG, PNG, JPG and GIF image formats are allowed.',
+
+            'location.required' => 'Product location is required.',
+            'location.string' => 'Product location must be a string.',
         ];
     }
 }

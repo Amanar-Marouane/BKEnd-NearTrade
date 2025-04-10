@@ -60,4 +60,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Product::class);
     }
+
+    public function lastActiveProducts()
+    {
+        return $this->products()->latest()->limit(6);
+    }
 }

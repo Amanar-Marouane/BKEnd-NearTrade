@@ -18,11 +18,11 @@ class ProductResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'category' => $this->category->category,
+            'category' => $this->category?->category,
             'status' => $this->status,
             'price' => $this->price,
-            'images' => explode('|', $this->images),
-            'user' => $this->user,
+            'location' => $this->location,
+            'images' => $this->images ? array_filter(explode('|', $this->images)) : [],
         ];
     }
 }

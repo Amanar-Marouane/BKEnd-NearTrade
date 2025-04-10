@@ -33,6 +33,7 @@ class ProductController extends Controller
             'description' => $request->description,
             'status' => $request->status,
             'price' => $request->price,
+            'location' => $request->location,
             'images' => $imagesPath,
         ]);
 
