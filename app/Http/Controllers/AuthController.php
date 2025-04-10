@@ -88,7 +88,7 @@ class AuthController extends Controller
         try {
             $user = JWTAuth::setToken($access_token)->authenticate();
             if ($user) {
-                return $this->success('User is authenticated', true, []);
+                return $this->success($user->id, true, []);
             }
         } catch (JWTException $e) {
             $user = User::where('refresh_token', '=', $refresh_token)->first();
@@ -99,7 +99,7 @@ class AuthController extends Controller
             $new_access_token = JWTAuth::fromUser($user);
             $new_access_cookie = cookie('access_token', $new_access_token, 1480, '/', null, true, true, false, 'None');
 
-            return $this->success('User is authenticated', true, [$new_access_cookie]);
+            return $this->success($user->id, true, [$new_access_cookie]);
         }
 
         return $this->success('User is not authenticated', false, []);
