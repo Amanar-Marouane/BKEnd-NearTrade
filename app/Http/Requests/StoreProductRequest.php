@@ -48,7 +48,7 @@ class StoreProductRequest extends FormRequest
             'description.string' => 'Product description must be a string.',
             'description.max' => 'Product description must not exceed 1000 characters.',
 
-            'category_id.required' => 'Category ID is required.',
+            'category_id.required' => 'Category is required.',
             'category_id.exists' => 'The specified category does not exist.',
             'category_id.uuid' => 'The Category ID must be a valid UUID.',
 

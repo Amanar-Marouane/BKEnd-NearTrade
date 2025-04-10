@@ -17,7 +17,7 @@ class ProductController extends Controller
     use HttpsResponse;
     public function store(StoreProductRequest $request)
     {
-        $images = $request->file('image');
+        $images = $request->file('images');
         $imagesPath = '|';
         foreach ($images as $image) {
             $imageName = Str::uuid() . '.' . $image->getClientOriginalExtension();
