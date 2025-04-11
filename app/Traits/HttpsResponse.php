@@ -15,7 +15,7 @@ trait HttpsResponse
             $code
         );
         foreach ($cookies as $key => $value) {
-            $response->withCookie(cookie($key, $value, 1480, null, null, true, true, false, 'None'));
+            $response->withCookie(cookie($key, $value, 1440, null, null, true, true, false, 'None'));
         }
         return $response;
     }
@@ -31,7 +31,7 @@ trait HttpsResponse
             $code
         );
         foreach ($cookies as $key => $value) {
-            $response->withCookie(cookie($key, $value, 1480, null, null, true, true, false, 'None'));
+            $response->withCookie(cookie($key, $value, 1440, null, null, true, true, false, 'None'));
         }
         return $response;
     }

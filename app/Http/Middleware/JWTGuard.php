@@ -29,23 +29,27 @@ class JWTGuard
 
         try {
             $user = JWTAuth::setToken($access_token)->authenticate();
+
             if (!$user) {
                 return $this->error('Invalid access token.', null, [], 403);
             }
+
+            $request->setUserResolver(fn() => $user);
+
+            return $next($request);
         } catch (JWTException $e) {
             $user = User::where('refresh_token', '=', $refresh_token)->first();
+
             if (!$user) {
                 return $this->error('Invalid or expired tokens.', null, [], 403);
             }
 
             $new_access_token = JWTAuth::fromUser($user);
-            $new_access_cookie = cookie('access_token', $new_access_token, 1480, '/', null, true, true, false, 'None');
+            $new_access_cookie = cookie('access_token', $new_access_token, 1440, '/', null, true, true, false, 'None');
 
-            $response = response($next($request));
-            $response->withCookie($new_access_cookie);
             $request->setUserResolver(fn() => $user);
-        }
 
-        return $next($request);
+            return response($next($request))->withCookie($new_access_cookie);
+        }
     }
 }
