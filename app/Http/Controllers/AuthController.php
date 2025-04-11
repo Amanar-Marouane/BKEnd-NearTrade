@@ -19,8 +19,8 @@ class AuthController extends Controller
     private function jwtGenerator(User $user)
     {
         $access_token = JWTAuth::fromUser($user);
-        $refresh_token = hash('sha256', Str::random(60));
-        $user->update(['refresh_token' => Hash::make($refresh_token)]);
+        $refresh_token = Str::uuid();
+        $user->update(['refresh_token' => $refresh_token]);
 
         return [
             'access_token' => $access_token,

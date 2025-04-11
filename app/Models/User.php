@@ -20,6 +20,7 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'profile',
         'description',
+        'refresh_token',
     ];
 
     public $incrementing = false;
@@ -27,8 +28,6 @@ class User extends Authenticatable implements JWTSubject
 
     protected $casts = [
         'id' => 'string',
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
     ];
 
     protected static function boot()

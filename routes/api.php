@@ -14,7 +14,7 @@ Route::group(['middleware' => IsLogged::class], function () {
 Route::group(['middleware' => JWTGuard::class], function () {
     Route::get('/profile', [UserController::class, 'index']);
 
-    Route::get('/products', [ProductController::class, 'index'])->name('product.index');
+    Route::get('/products/me', [ProductController::class, 'userProducts'])->name('product.index');
     Route::get('/product/add', [ProductController::class, 'add'])->name('product.add');
     Route::post('/product/store', [ProductController::class, 'store'])->name('product.store');
 

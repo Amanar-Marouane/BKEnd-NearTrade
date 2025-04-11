@@ -27,7 +27,7 @@ class ProductController extends Controller
         }
 
         $product = Product::create([
-            'user_id' => $request->user_id,
+            'user_id' => $request->user()->id,
             'category_id' => $request->category_id,
             'name' => $request->name,
             'description' => $request->description,
@@ -40,9 +40,9 @@ class ProductController extends Controller
         return $this->success('Product has been created with success', $product, [], 201);
     }
 
-    public function index(Request $request)
+    public function userProducts(Request $request)
     {
-        $products = Product::where('user_id', $request->user()->id)->get();
+        $products = $request->user()->products;
         return $this->success(null, ProductResource::collection($products));
     }
 

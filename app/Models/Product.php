@@ -9,6 +9,10 @@ class Product extends Model
 {
     protected $fillable = ['id', 'user_id', 'category_id', 'name', 'description', 'status', 'price', 'images', 'location'];
 
+    protected $casts = [
+        'id' => 'string',
+    ];
+
     protected static function boot()
     {
         parent::boot();

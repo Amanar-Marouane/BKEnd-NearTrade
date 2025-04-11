@@ -22,7 +22,6 @@ class StoreProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|exists:users,id|uuid',
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
             'category_id' => 'required|exists:categories,id|uuid',
@@ -37,10 +36,6 @@ class StoreProductRequest extends FormRequest
     public function messages()
     {
         return [
-            'user_id.required' => 'User ID is required.',
-            'user_id.exists' => 'The specified user does not exist.',
-            'user_id.uuid' => 'The User ID must be a valid UUID.',
-
             'name.required' => 'Product name is required.',
             'name.string' => 'Product name must be a string.',
             'name.max' => 'Product name must not exceed 255 characters.',
