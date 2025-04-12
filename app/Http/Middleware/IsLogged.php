@@ -22,21 +22,22 @@ class IsLogged
     public function handle(Request $request, Closure $next): Response
     {
         $access_token = $request->cookie('access_token');
+        $refresh_token = $request->cookie('refresh_token');
+
         if ($access_token) {
             try {
                 $user = JWTAuth::setToken($access_token)->authenticate();
                 if ($user) {
-                    return $this->error('You are already logged in.', null, [], 403);
+                    return $this->error('Logout first. You are already logged in.', null, [], 403);
                 }
             } catch (JWTException $e) {
             }
         }
 
-        $refresh_token = $request->cookie('refresh_token');
         if ($refresh_token) {
             $user = User::where('refresh_token', $refresh_token)->first();
             if ($user) {
-                return $this->error('You are already logged in.', null, [], 403);
+                return $this->error('Logout first. You are already logged in.', null, [], 403);
             }
         }
 
