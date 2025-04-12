@@ -3,11 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\{StoreProductRequest};
-use App\Http\Resources\CategoryResource;
-use App\Http\Resources\ProductResource;
-use App\Models\Category;
-use App\Models\Product;
-use App\Models\User;
+use App\Http\Resources\{CategoryResource, ProductResource, UserResource};
+use App\Models\{Category, Product, User};
 use App\Traits\{HttpsResponse};
 use Illuminate\Http\Request;
 use Illuminate\Support\{Str};
@@ -52,5 +49,16 @@ class ProductController extends Controller
             'categories' => CategoryResource::collection(Category::all()),
             'status' => ['New', 'Used'],
         ]);
+    }
+
+    public function show(Request $request, $id)
+    {
+        $user = $request->user();
+        $product = Product::find($id);
+        if ($product) return $this->success('Product fetched with success', [
+            'product' => new ProductResource($product),
+            'user' => new UserResource($user),
+        ]);
+        return $this->error('Product NOT FOUND', null, [], 404);
     }
 }
