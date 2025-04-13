@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class ProductResource extends JsonResource
 {
@@ -23,6 +24,7 @@ class ProductResource extends JsonResource
             'price' => $this->price,
             'location' => $this->location,
             'images' => $this->images ? array_filter(explode('|', $this->images)) : [],
+            'canDelete' => Auth::user()->can('delete', $this->resource),
         ];
     }
 }

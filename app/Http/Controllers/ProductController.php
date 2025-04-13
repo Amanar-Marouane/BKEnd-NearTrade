@@ -61,4 +61,18 @@ class ProductController extends Controller
         ]);
         return $this->error('Product NOT FOUND', null, [], 404);
     }
+
+    public function delete(Request $request, $id)
+    {
+        $user = $request->user();
+        $product = Product::find($id);
+
+        if (!$product) return $this->error('Product NOT FOUND', null, [], 404);
+
+        if ($user->cannot('delete', $product)) {
+            return $this->error('Access denied', null, [], 403);
+        }
+        $product->delete();
+        return $this->success('Product Has Been Deleted With Success');
+    }
 }

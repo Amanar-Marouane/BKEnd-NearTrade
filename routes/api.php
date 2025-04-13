@@ -17,6 +17,7 @@ Route::group(['middleware' => JWTGuard::class], function () {
     Route::get('/products/me', [ProductController::class, 'userProducts'])->name('product.index');
     Route::get('/product/add', [ProductController::class, 'add'])->name('product.add');
     Route::post('/product/store', [ProductController::class, 'store'])->name('product.store');
+    Route::delete('/product/{id}', [ProductController::class, 'delete'])->name('product.delete');
     Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
 
     Route::post('/logout', [AuthController::class, 'logout']);
