@@ -12,6 +12,13 @@ use Illuminate\Support\{Str};
 class ProductController extends Controller
 {
     use HttpsResponse;
+
+    public function index(Request $request)
+    {
+        $products = Product::where('user_id', '!=', $request->user()->id)->get();
+        return $this->success(null, ProductResource::collection($products));
+    }
+
     public function store(StoreProductRequest $request)
     {
         $images = $request->file('images');
