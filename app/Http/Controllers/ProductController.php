@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\{StoreProductRequest};
 use App\Http\Resources\{CategoryResource, ProductResource, UserResource};
-use App\Models\{Category, Product, User};
+use App\Models\{Category, Product};
 use App\Traits\{HttpsResponse};
 use Illuminate\Http\Request;
-use Illuminate\Support\{Str, Arr};
+use Illuminate\Support\{Str};
+
+use function PHPUnit\Framework\isEmpty;
 
 class ProductController extends Controller
 {
@@ -102,7 +104,7 @@ class ProductController extends Controller
             $imagePath = env('CURRET_HOST') . '/storage/Products/' . $imageName;
             $imagesPath .= $imagePath . '|';
         }
-        
+
         $product->deleteMedia();
 
         $product->update([
@@ -115,5 +117,19 @@ class ProductController extends Controller
             'images' => $imagesPath,
         ]);
         return $this->success('Product Has Been updated With Success');
+    }
+
+    public function filter(Request $request)
+    {
+        $products = Product::where('name', 'LIKE', "%{$request->name}%")
+            ->where('price', '>=', $request->price ?? 0)
+            ->where('location', 'LIKE', "%{$request->location}%")
+            ->where('category_id', 'LIKE', "%{$request->category_id}%");
+
+        if ($request->filled('status') && is_array($request->status) && count($request->status)) {
+            $products->whereIn('status', $request->status);
+        }
+
+        return $this->success(null, ProductResource::collection($products->get()));
     }
 }
