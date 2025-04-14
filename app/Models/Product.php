@@ -32,4 +32,26 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function deleteMedia()
+    {
+        $images = array_filter(explode('|', $this->images));
+        foreach ($images as $imagePath) {
+            try {
+                $parts = explode('/', $imagePath);
+                $filename = end($parts);
+                $fullPath = storage_path('app/public/Products/' . $filename);
+                if (file_exists($fullPath)) {
+                    unlink($fullPath);
+                } else {
+                    $publicPath = public_path('storage/Products/' . $filename);
+                    if (file_exists($publicPath)) {
+                        unlink($publicPath);
+                    } else {
+                    }
+                }
+            } catch (\Exception $e) {
+            }
+        }
+    }
 }

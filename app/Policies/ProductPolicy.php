@@ -20,4 +20,9 @@ class ProductPolicy
     {
         return $user->role === 'Admin' || $product->user_id === $user->id;
     }
+
+    public function update(User $user, Product $product)
+    {
+        return $product->user_id === $user->id;
+    }
 }

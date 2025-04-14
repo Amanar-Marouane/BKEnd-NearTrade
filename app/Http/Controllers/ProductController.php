@@ -7,7 +7,7 @@ use App\Http\Resources\{CategoryResource, ProductResource, UserResource};
 use App\Models\{Category, Product, User};
 use App\Traits\{HttpsResponse};
 use Illuminate\Http\Request;
-use Illuminate\Support\{Str};
+use Illuminate\Support\{Str, Arr};
 
 class ProductController extends Controller
 {
@@ -79,7 +79,41 @@ class ProductController extends Controller
         if ($user->cannot('delete', $product)) {
             return $this->error('Access denied', null, [], 403);
         }
+
+        $product->deleteMedia();
         $product->delete();
         return $this->success('Product Has Been Deleted With Success');
+    }
+
+    public function update(Request $request, $id)
+    {
+        $user = $request->user();
+        $product = Product::find($id);
+
+        if (!$product) return $this->error('Product NOT FOUND', null, [], 404);
+        if ($user->cannot('update', $product)) {
+            return $this->error('Access denied', null, [], 403);
+        }
+
+        $imagesPath = '|';
+        foreach ($request->file('images') as $image) {
+            $imageName = Str::uuid() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('Products', $imageName, 'public');
+            $imagePath = env('CURRET_HOST') . '/storage/Products/' . $imageName;
+            $imagesPath .= $imagePath . '|';
+        }
+        
+        $product->deleteMedia();
+
+        $product->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'category_id' => $request->category_id,
+            'status' => $request->status,
+            'price' => $request->price,
+            'location' => $request->location,
+            'images' => $imagesPath,
+        ]);
+        return $this->success('Product Has Been updated With Success');
     }
 }
