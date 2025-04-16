@@ -45,7 +45,7 @@ class AuthController extends Controller
         ]);
         Auth::login($user);
         $cookies = $this->jwtGenerator($user);
-        return $this->success('Account created succefully', new UserResource($user), $cookies, 201);
+        return $this->success('Account created succefully', null, $cookies, 201);
     }
 
     public function login(UserLoginRequest $request)
@@ -90,7 +90,8 @@ class AuthController extends Controller
             if ($user) {
                 return $this->success('User is authenticated', [
                     'authenticated' => true,
-                    'id' => $user->id
+                    'id' => $user->id,
+                    'user' => new UserResource($user),
                 ]);
             }
         } catch (JWTException $e) {
@@ -103,7 +104,8 @@ class AuthController extends Controller
 
             return $this->success('User is authenticated', [
                 'authenticated' => true,
-                'id' => $user->id
+                'id' => $user->id,
+                'user' => new UserResource($user),
             ], ['access_token' => $new_access_token]);
         }
 

@@ -24,9 +24,8 @@ class ProductResource extends JsonResource
             'status' => $this->status,
             'price' => $this->price,
             'location' => $this->location,
+            'user_id' => $this->user_id,
             'images' => $this->images ? array_filter(explode('|', $this->images)) : [],
-            'canDelete' => Auth::user()->can('delete', $this->resource),
-            'canUpdate' => Auth::user()->can('update', $this->resource),
         ];
     }
 }
