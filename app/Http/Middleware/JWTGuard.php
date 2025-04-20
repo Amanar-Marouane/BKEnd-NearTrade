@@ -21,10 +21,9 @@ class JWTGuard
     public function handle(Request $request, Closure $next): Response
     {
         $access_token = $request->cookie('access_token');
-        $refresh_token = $request->cookie('refresh_token');
 
-        if (!$access_token || !$refresh_token) {
-            return $this->error('Tokens are missing. Login first.', null, [], 403);
+        if (!$access_token) {
+            return $this->error('Access token is missing. Login first.', null, [], 403);
         }
 
         try {
@@ -38,6 +37,10 @@ class JWTGuard
 
             return $next($request);
         } catch (JWTException $e) {
+            $refresh_token = $request->cookie('refresh_token');
+            if (!$refresh_token) {
+                return $this->error('Refresh token is missing. Login please.', null, [], 403);
+            }
             $user = User::where('refresh_token', '=', $refresh_token)->first();
 
             if (!$user) {

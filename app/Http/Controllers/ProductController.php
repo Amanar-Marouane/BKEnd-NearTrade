@@ -116,7 +116,7 @@ class ProductController extends Controller
             'location' => $request->location,
             'images' => $imagesPath,
         ]);
-        return $this->success('Product Has Been updated With Success');
+        return $this->success('Product Has Been updated With Success', null, [], 204);
     }
 
     public function filter(Request $request)

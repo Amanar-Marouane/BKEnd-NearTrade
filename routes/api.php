@@ -1,6 +1,11 @@
 <?php
 
-use App\Http\Controllers\{AuthController, FavoriteController, ProductController, UserController};
+use App\Http\Controllers\{
+    AuthController,
+    FavoriteController,
+    ProductController,
+    UserController
+};
 use App\Http\Middleware\{IsLogged, JWTGuard};
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Response;
@@ -14,16 +19,19 @@ Route::group(['middleware' => IsLogged::class], function () {
 
 Route::group(['middleware' => JWTGuard::class], function () {
     Route::get('/profile', [UserController::class, 'index']);
+    Route::post('/imgupdate', [UserController::class, 'imageUpdating']);
+
     Route::get('/favorites', [FavoriteController::class, 'index']);
+    Route::post('/favorite/{id}', [FavoriteController::class, 'favManager']);
+
     Route::get('/products', [ProductController::class, 'index'])->name('product.index');
     Route::get('/products/me', [ProductController::class, 'userProducts'])->name('product.userProducts');
-    Route::get('/product/add', [ProductController::class, 'add'])->name('product.add');
-    Route::post('/product/store', [ProductController::class, 'store'])->name('product.store');
-    Route::post('/product/filter', [ProductController::class, 'filter'])->name('product.filter');
-    Route::delete('/product/{id}', [ProductController::class, 'delete'])->name('product.delete');
-    Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
-    Route::post('/favorite/{id}', [FavoriteController::class, 'favManager']);
-    Route::post('/product/update/{id}', [ProductController::class, 'update'])->name('product.update');
+    Route::post('/products', [ProductController::class, 'store'])->name('product.store');
+    Route::post('/products/filter', [ProductController::class, 'filter'])->name('product.filter');
+    Route::get('/products/add', [ProductController::class, 'add'])->name('product.add');
+    Route::post('/products/update/{id}', [ProductController::class, 'update'])->name('product.update');
+    Route::delete('/products/{id}', [ProductController::class, 'delete'])->name('product.delete');
+    Route::get('/products/{id}', [ProductController::class, 'show'])->name('product.show');
 
     Route::post('/logout', [AuthController::class, 'logout']);
 });
