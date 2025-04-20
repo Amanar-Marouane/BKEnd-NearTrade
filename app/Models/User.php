@@ -64,4 +64,14 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->products()->latest()->limit(6);
     }
+
+    public function favorites()
+    {
+        return $this->belongsToMany(Product::class, 'favorites');
+    }
+
+    public function isFaved(Product $product)
+    {
+        return $this->favorites()->where('product_id', $product->id)->exists();
+    }
 }

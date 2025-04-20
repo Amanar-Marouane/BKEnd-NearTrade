@@ -26,6 +26,8 @@ class ProductResource extends JsonResource
             'location' => $this->location,
             'user_id' => $this->user_id,
             'images' => $this->images ? array_filter(explode('|', $this->images)) : [],
+            'isFaved' => $request->user()->isFaved($this->resource),
+            'favorites_count' => $this->favorites_count,
         ];
     }
 }

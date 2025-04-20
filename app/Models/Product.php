@@ -54,4 +54,14 @@ class Product extends Model
             }
         }
     }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    public function getFavoritesCountAttribute()
+    {
+        return $this->favorites()->count();
+    }
 }
