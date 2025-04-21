@@ -19,6 +19,7 @@ Route::group(['middleware' => IsLogged::class], function () {
 
 Route::group(['middleware' => JWTGuard::class], function () {
     Route::get('/profile', [UserController::class, 'index']);
+    Route::put('/profile/update', [UserController::class, 'update']);
     Route::post('/imgupdate', [UserController::class, 'imageUpdating']);
 
     Route::get('/favorites', [FavoriteController::class, 'index']);

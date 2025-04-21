@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ImageUpdateRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Http\Resources\UserResource;
 use App\Traits\HttpsResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
@@ -16,6 +18,20 @@ class UserController extends Controller
     {
         $user = new UserResource($request->user());
         return $this->success('Welcome, ' . $user->name, $user, []);
+    }
+
+    public function update(Request $request)
+    {
+
+        $user = $request->user();
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'description' => $request->description,
+        ]);
+
+        return $this->success('Info has been updated with success', null, [], 204);
     }
 
 
