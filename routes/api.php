@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\{
     AuthController,
+    ChatController,
+    ChatIdsController,
     FavoriteController,
     ProductController,
     UserController
@@ -18,7 +20,8 @@ Route::group(['middleware' => IsLogged::class], function () {
 });
 
 Route::group(['middleware' => JWTGuard::class], function () {
-    Route::get('/profile', [UserController::class, 'index']);
+
+    Route::get('/profile/{id}', [UserController::class, 'index']);
     Route::put('/profile/update', [UserController::class, 'update']);
     Route::post('/imgupdate', [UserController::class, 'imageUpdating']);
 
@@ -33,6 +36,12 @@ Route::group(['middleware' => JWTGuard::class], function () {
     Route::post('/products/update/{id}', [ProductController::class, 'update'])->name('product.update');
     Route::delete('/products/{id}', [ProductController::class, 'delete'])->name('product.delete');
     Route::get('/products/{id}', [ProductController::class, 'show'])->name('product.show');
+
+    Route::post('/message', [ChatController::class, 'sendMessage']);
+    Route::get('/message/{id}', [ChatController::class, 'index']);
+    Route::get('/chat_id/{id1}/{id2}', function ($id1, $id2) {
+        return response(['data' => ChatIdsController::findOrMake($id1, $id2)]);
+    });
 
     Route::post('/logout', [AuthController::class, 'logout']);
 });

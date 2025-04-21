@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ImageUpdateRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Http\Resources\UserResource;
+use App\Models\User;
 use App\Traits\HttpsResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -14,9 +15,9 @@ class UserController extends Controller
 {
     use HttpsResponse;
 
-    public function index(Request $request)
+    public function index($id)
     {
-        $user = new UserResource($request->user());
+        $user = new UserResource(User::find($id));
         return $this->success('Welcome, ' . $user->name, $user, []);
     }
 

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\{StoreProductRequest};
 use App\Http\Resources\{CategoryResource, ProductResource, UserResource};
-use App\Models\{Category, Product};
+use App\Models\{Category, Product, User};
 use App\Traits\{HttpsResponse};
 use Illuminate\Http\Request;
 use Illuminate\Support\{Str};
@@ -62,8 +62,9 @@ class ProductController extends Controller
 
     public function show(Request $request, $id)
     {
-        $user = $request->user();
         $product = Product::find($id);
+        $user = User::find($product->user_id);
+
         if ($product) return $this->success('Product fetched with success', [
             'product' => new ProductResource($product),
             'user' => new UserResource($user),
