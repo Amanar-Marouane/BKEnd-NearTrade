@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class ChatIds extends Model
@@ -30,5 +31,13 @@ class ChatIds extends Model
                 $chat->id = (string) Str::uuid();
             }
         });
+    }
+
+    public function getOtherUserAttribute()
+    {
+        $currentUserId = Auth::id();
+        $otherUserId = $this->user1 == $currentUserId ? $this->user2 : $this->user1;
+
+        return User::find($otherUserId);
     }
 }

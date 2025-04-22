@@ -20,7 +20,7 @@ class MessageResource extends JsonResource
             'sender_id' => $request->user()->id,
             'receiver_id' => $request->user()->id === $this->sender_id ? $this->receiver_id : $this->sender_id,
             'sender' => $request->user()->name,
-            'timestamp' => $this->created_at,
+            'timestamp' => $this->created_at->format('Y-m-d H:i'),
             'isMe' => $request->user()->id === $this->sender_id ? true : false,
         ];
     }

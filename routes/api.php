@@ -38,6 +38,7 @@ Route::group(['middleware' => JWTGuard::class], function () {
     Route::get('/products/{id}', [ProductController::class, 'show'])->name('product.show');
 
     Route::post('/message', [ChatController::class, 'sendMessage']);
+    Route::get('/message/history', [ChatController::class, 'history']);
     Route::get('/message/{id}', [ChatController::class, 'index']);
     Route::get('/chat_id/{id1}/{id2}', function ($id1, $id2) {
         return response(['data' => ChatIdsController::findOrMake($id1, $id2)]);
