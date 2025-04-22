@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('chats', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->uuid('chat_id');
+            $table->foreign('chat_id')->references('id')->on('chat_ids')->onDelete('restrict');
             $table->uuid('sender_id');
             $table->foreign('sender_id')->references('id')->on('users')->onDelete('restrict');
             $table->uuid('receiver_id');

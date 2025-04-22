@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 class Chat extends Model
 {
     protected $fillable = [
+        'chat_id',
         'id',
         'sender_id',
         'receiver_id',

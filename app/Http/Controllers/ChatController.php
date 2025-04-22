@@ -15,13 +15,17 @@ class ChatController extends Controller
 
     public function sendMessage(Request $request)
     {
+        $chat_id = ChatIdsController::findOrMake($request->sender_id, $request->receiver_id);
+
         $messageToInsert = Chat::create([
+            'chat_id' => $chat_id,
             'sender_id' => $request->sender_id,
             'receiver_id' => $request->receiver_id,
             'message' => $request->message,
         ]);
 
         $message = (object) [
+            'chat_id' => $chat_id,
             'id' => $messageToInsert->id,
             'sender_id' => $request->sender_id,
             'receiver_id' => $request->receiver_id,
@@ -61,5 +65,12 @@ class ChatController extends Controller
             ->get();
 
         return $this->success(null, ChatIdsResource::collection($chats));
+    }
+
+    public function isUserId($id)
+    {
+        $user = User::find($id);
+        if ($user) return $this->success('User does exist', true);
+        return $this->success('User does not exist', false);
     }
 }

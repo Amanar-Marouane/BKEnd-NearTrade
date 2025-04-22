@@ -27,8 +27,7 @@ class ChatEvent implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        $chat_id = ChatIdsController::findOrMake($this->message->sender_id, $this->message->receiver_id);
-        return new Channel('chat.' . $chat_id);
+        return new Channel('chat.' . $this->message->chat_id);
     }
 
     public function broadcastAs()

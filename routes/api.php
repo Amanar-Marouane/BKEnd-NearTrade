@@ -37,6 +37,7 @@ Route::group(['middleware' => JWTGuard::class], function () {
     Route::delete('/products/{id}', [ProductController::class, 'delete'])->name('product.delete');
     Route::get('/products/{id}', [ProductController::class, 'show'])->name('product.show');
 
+    Route::post('/is_user/{id}',[ChatController::class, 'isUserId']);
     Route::post('/message', [ChatController::class, 'sendMessage']);
     Route::get('/message/history', [ChatController::class, 'history']);
     Route::get('/message/{id}', [ChatController::class, 'index']);
