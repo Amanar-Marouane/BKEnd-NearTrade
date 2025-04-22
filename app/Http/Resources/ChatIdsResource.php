@@ -17,9 +17,9 @@ class ChatIdsResource extends JsonResource
         $user = $this->other_user;
 
         return [
-            'name' => $user->name,
-            'profile' => $user->profile,
-            'id' => $user->id,
+            'name'    => $user?->name,
+            'profile' => $user?->profile,
+            'id'      => $user?->id,
         ];
     }
 }

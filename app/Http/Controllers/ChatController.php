@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Events\ChatEvent;
 use App\Http\Resources\ChatIdsResource;
 use App\Http\Resources\MessageResource;
-use App\Models\{ChatIds, Chat, User};
+use App\Models\{ChatIds, Chat, Product, User};
 use App\Traits\HttpsResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ChatController extends Controller
 {
@@ -15,28 +16,19 @@ class ChatController extends Controller
 
     public function sendMessage(Request $request)
     {
-        $chat_id = ChatIdsController::findOrMake($request->sender_id, $request->receiver_id);
+        $chat_id = ChatIdsController::findOrMake($request->user()->id, $request->receiver_id);
 
         $messageToInsert = Chat::create([
             'chat_id' => $chat_id,
-            'sender_id' => $request->sender_id,
+            'sender_id' => $request->user()->id,
             'receiver_id' => $request->receiver_id,
             'message' => $request->message,
         ]);
 
-        $message = (object) [
-            'chat_id' => $chat_id,
-            'id' => $messageToInsert->id,
-            'sender_id' => $request->sender_id,
-            'receiver_id' => $request->receiver_id,
-            'body' => $request->message,
-            'sender' => $request->user()->name,
-            'timestamp' => now()->format('Y-m-d H:i:s')
-        ];
-
+        $message = new MessageResource($messageToInsert);
         broadcast(new ChatEvent($message));
 
-        return $this->success('Message Sent', $request->message);
+        return $this->success('Message Sent', $message);
     }
 
     public function index(Request $request, $id)
@@ -51,7 +43,8 @@ class ChatController extends Controller
         })->orWhere(function ($query) use ($chat) {
             $query->where('sender_id', $chat->user2)
                 ->where('receiver_id', $chat->user1);
-        })->get();
+        })->orderBy('created_at', 'asc')
+            ->get();
 
         return $this->success($otherUser->name, MessageResource::collection($messages));
     }
@@ -72,5 +65,35 @@ class ChatController extends Controller
         $user = User::find($id);
         if ($user) return $this->success('User does exist', true);
         return $this->success('User does not exist', false);
+    }
+
+    public function store(Request $request, $id)
+    {
+        $product = Product::find($id);
+        if (!$product) {
+            return $this->error('Product not found', null, [], 404);
+        }
+
+        $chatId = ChatIdsController::findOrMake($request->user()->id, $product->user_id);
+
+        $deal = Chat::create([
+            'chat_id'     => $chatId,
+            'sender_id'   => $request->user()->id,
+            'receiver_id' => $product->user_id,
+            'message'     => 'I propose a deal starting with',
+            'product_id'  => $id,
+            'type'        => 'Offer',
+            'status'      => 'Pending',
+            'offer'       => $request->offer,
+        ]);
+
+        if (!$deal) {
+            return $this->error('Failed to create deal', null, [], 500);
+        }
+
+        $message = new MessageResource($deal);
+        broadcast(new ChatEvent($message));
+
+        return $this->success('Deal has been submitted successfully');
     }
 }

@@ -4,6 +4,7 @@ use App\Http\Controllers\{
     AuthController,
     ChatController,
     ChatIdsController,
+    DealController,
     FavoriteController,
     ProductController,
     UserController
@@ -44,6 +45,8 @@ Route::group(['middleware' => JWTGuard::class], function () {
     Route::get('/chat_id/{id1}/{id2}', function ($id1, $id2) {
         return response(['data' => ChatIdsController::findOrMake($id1, $id2)]);
     });
+
+    Route::post('/deal/{id}', [ChatController::class, 'store']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
 });

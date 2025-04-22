@@ -22,16 +22,19 @@ class ChatEvent implements ShouldBroadcast
 
     public function __construct($message)
     {
+        Log::info('construct');
         $this->message = $message;
     }
 
     public function broadcastOn()
     {
+        Log::info('broadcastOn');
         return new Channel('chat.' . $this->message->chat_id);
     }
 
     public function broadcastAs()
     {
+        Log::info('broadcastAs');
         return 'chatEvent';
     }
 }

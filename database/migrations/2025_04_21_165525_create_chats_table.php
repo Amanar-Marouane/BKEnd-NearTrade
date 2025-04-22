@@ -20,6 +20,11 @@ return new class extends Migration
             $table->uuid('receiver_id');
             $table->foreign('receiver_id')->references('id')->on('users')->onDelete('restrict');
             $table->string('message');
+            $table->integer('offer')->nullable();
+            $table->enum('type', ['Message', 'Offer'])->default('Message');
+            $table->uuid('product_id')->nullable();
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('set null');
+            $table->enum('status', ['Pending', 'Refused', 'Accepted'])->nullable();
             $table->timestamps();
         });
     }

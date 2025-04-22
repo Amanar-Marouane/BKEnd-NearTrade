@@ -13,6 +13,10 @@ class Chat extends Model
         'sender_id',
         'receiver_id',
         'message',
+        'type',
+        'product_id',
+        'status',
+        'offer',
     ];
 
     public $incrementing = false;
@@ -25,9 +29,9 @@ class Chat extends Model
     protected static function boot()
     {
         parent::boot();
-        static::creating(function ($user) {
-            if (empty($user->id)) {
-                $user->id = (string) Str::uuid();
+        static::creating(function ($message) {
+            if (empty($message->id)) {
+                $message->id = (string) Str::uuid();
             }
         });
     }
@@ -40,5 +44,10 @@ class Chat extends Model
     public function receiver()
     {
         return $this->belongsTo(User::class, 'receiver_id');
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
     }
 }
