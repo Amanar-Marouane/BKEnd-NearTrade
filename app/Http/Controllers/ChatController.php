@@ -10,6 +10,8 @@ use App\Traits\HttpsResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
+use function PHPUnit\Framework\returnSelf;
+
 class ChatController extends Controller
 {
     use HttpsResponse;
@@ -43,7 +45,7 @@ class ChatController extends Controller
         })->orWhere(function ($query) use ($chat) {
             $query->where('sender_id', $chat->user2)
                 ->where('receiver_id', $chat->user1);
-        })->orderBy('created_at', 'asc')
+        })->orderBy('updated_at', 'asc')
             ->get();
 
         return $this->success($otherUser->name, MessageResource::collection($messages));
@@ -95,5 +97,27 @@ class ChatController extends Controller
         broadcast(new ChatEvent($message));
 
         return $this->success('Deal has been submitted successfully');
+    }
+
+    public function acceptDeal($id)
+    {
+        $deal = Chat::find($id);
+        if (!$deal) return $this->error('Offer not found', null, [], 404);
+
+        $deal->status = 'Accepted';
+        $deal->updated_at = now();
+        $deal->save();
+        return $this->success('Offer got accepted with success', new MessageResource($deal));
+    }
+
+    public function refuseDeal($id)
+    {
+        $deal = Chat::find($id);
+        if (!$deal) return $this->error('Offer not found', null, [], 404);
+
+        $deal->status = 'Refused';
+        $deal->updated_at = now();
+        $deal->save();
+        return $this->success('Offer got declined with success', new MessageResource($deal));
     }
 }

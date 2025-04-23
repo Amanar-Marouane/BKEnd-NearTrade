@@ -38,7 +38,7 @@ Route::group(['middleware' => JWTGuard::class], function () {
     Route::delete('/products/{id}', [ProductController::class, 'delete'])->name('product.delete');
     Route::get('/products/{id}', [ProductController::class, 'show'])->name('product.show');
 
-    Route::post('/is_user/{id}',[ChatController::class, 'isUserId']);
+    Route::post('/is_user/{id}', [ChatController::class, 'isUserId']);
     Route::post('/message', [ChatController::class, 'sendMessage']);
     Route::get('/message/history', [ChatController::class, 'history']);
     Route::get('/message/{id}', [ChatController::class, 'index']);
@@ -47,6 +47,8 @@ Route::group(['middleware' => JWTGuard::class], function () {
     });
 
     Route::post('/deal/{id}', [ChatController::class, 'store']);
+    Route::post('/offer/accept/{id}', [ChatController::class, 'acceptDeal']);
+    Route::post('/offer/refuse/{id}', [ChatController::class, 'refuseDeal']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
 });
