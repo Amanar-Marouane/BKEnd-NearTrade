@@ -23,7 +23,7 @@ class MessageResource extends JsonResource
             'sender' => $this->sender->name,
             'timestamp' => $this->created_at->format('Y-m-d H:i'),
             'type' => $this->type,
-            'product' => $this->product,
+            'product' => new ProductResource($this->product),
             'status' => $this->status,
             'offer' => $this->offer,
         ];

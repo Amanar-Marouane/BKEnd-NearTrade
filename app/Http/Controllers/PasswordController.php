@@ -60,6 +60,8 @@ class PasswordController extends Controller
             return $this->error('Verification code has already expired. Please request a new one.', null, [], 400);
         }
 
+        $verification->delete();
+
         return $this->success('Enter your new password.');
     }
 
