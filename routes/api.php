@@ -6,6 +6,7 @@ use App\Http\Controllers\{
     ChatIdsController,
     DealController,
     FavoriteController,
+    PasswordController,
     ProductController,
     UserController
 };
@@ -64,3 +65,7 @@ Route::get('/image/{filename}', function ($filename) {
         'Access-Control-Allow-Origin' => 'http://localhost:5173',
     ]);
 });
+
+Route::post('/reset-password/send-vc', [PasswordController::class, 'sendOrFail']);
+Route::post('/reset-password/verify', [PasswordController::class, 'validOrFail']);
+Route::post('/reset-password/set', [PasswordController::class, 'changeOrFail']);
