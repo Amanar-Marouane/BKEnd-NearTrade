@@ -64,4 +64,9 @@ class Product extends Model
     {
         return $this->favorites()->count();
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 }

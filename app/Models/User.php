@@ -75,4 +75,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->favorites()->where('product_id', $product->id)->exists();
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 }

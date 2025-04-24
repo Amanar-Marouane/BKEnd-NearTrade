@@ -8,6 +8,7 @@ use App\Http\Controllers\{
     FavoriteController,
     PasswordController,
     ProductController,
+    ReviewController,
     UserController
 };
 use App\Http\Middleware\{IsLogged, JWTGuard};
@@ -50,6 +51,8 @@ Route::group(['middleware' => JWTGuard::class], function () {
     Route::post('/deal/{id}', [ChatController::class, 'store']);
     Route::post('/offer/accept/{id}', [ChatController::class, 'acceptDeal']);
     Route::post('/offer/refuse/{id}', [ChatController::class, 'refuseDeal']);
+
+    Route::post('/review/{id}', [ReviewController::class, 'store']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
 });

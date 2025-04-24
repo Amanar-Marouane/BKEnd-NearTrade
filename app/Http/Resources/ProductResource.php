@@ -28,6 +28,7 @@ class ProductResource extends JsonResource
             'images' => $this->images ? array_filter(explode('|', $this->images)) : [],
             'isFaved' => $request->user()?->isFaved($this->resource),
             'favorites_count' => $this->favorites_count,
+            'reviews' => ReviewResource::collection($this->reviews),
         ];
     }
 }
