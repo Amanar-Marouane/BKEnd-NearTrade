@@ -29,6 +29,7 @@ class ProductResource extends JsonResource
             'isFaved' => $request->user()?->isFaved($this->resource),
             'favorites_count' => $this->favorites_count,
             'reviews' => ReviewResource::collection($this->reviews),
+            'average_rating' => $this->averageRating(),
         ];
     }
 }

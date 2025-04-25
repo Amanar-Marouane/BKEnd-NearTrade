@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Resources\ReviewResource;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -68,5 +69,10 @@ class Product extends Model
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function averageRating()
+    {
+        return number_format($this->reviews->avg('rating') ?? 0, 2);
     }
 }
