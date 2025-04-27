@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('chat_ids', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('user1');
-            $table->foreign('user1')->references('id')->on('users')->onDelete('restrict');
+            $table->foreign('user1')->references('id')->on('users')->onDelete('cascade');
             $table->uuid('user2');
-            $table->foreign('user2')->references('id')->on('users')->onDelete('restrict');
+            $table->foreign('user2')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
